@@ -1,11 +1,12 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import weatherLogo from '../assets/WeatherLogo.png';
+import WeatherLogo from '../assets/WeatherLogo.png';
+import { BLACK, PRIMARY, WHITE } from '../constants/COLORS';
 
 const LogoHeader = () => {
     return (
         <View style={styles.container}>
-            <Image style={styles.logo} source={weatherLogo} />
+            <Image style={styles.logo} source={WeatherLogo} />
         </View>
     )
 }
@@ -16,14 +17,11 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white',
-        height: 60,
+        backgroundColor: PRIMARY,
     },
     logo: {
-        marginTop: "50",
-        width: 100,
-        height: 100,
-        resizeMode: 'center'
+        width: 70,
+        height: 40,
+        resizeMode: 'contain',
     },
-
-})
+});
