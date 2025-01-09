@@ -6,6 +6,7 @@ import HomeScreen from '../screens/HomeScreen';
 import FutureForecastScreen from '../screens/FutureForecastScreen';
 import AirQualityScreen from '../screens/AirQualityScreen';
 import LogoHeader from '../components/LogoHeader';
+import { PRIMARY } from '../constants/COLORS';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,11 +14,22 @@ const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
     return (
         <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator
+                screenOptions={
+                    {
+                        headerTitle: () => <LogoHeader />,
+                        headerTitleAlign: 'center',
+                        headerStyle: {
+                            backgroundColor: PRIMARY,
+                            height: 100,
+                        },
+                    }}
+            >
                 <Stack.Screen
                     name="Home"
                     component={HomeScreen}
                     options={{
+                        // headerStyle: { backgroundColor: PRIMARY },
                         headerTitle: () => <LogoHeader />,
                         headerTitleAlign: 'center',
                     }}
