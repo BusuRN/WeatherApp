@@ -1,4 +1,3 @@
-import LogoHeader from '../components/LogoHeader';
 import {
     Image,
     Keyboard,
