@@ -5,18 +5,20 @@ import { CLOUDS } from '../constants/CLOUDS'
 import { ACCENT } from '../constants/COLORS'
 
 
-const FutureForecast = ({ weatherData, dateTitle, condition, }) => {
+const FutureForecast = ({ weatherData, dateTitle, condition, showDivider, temperature, feelsLike, minTemp, maxTemp, showLastDivider }) => {
     return (
         <View>
             <Text style={styles.text}>{dateTitle}</Text>
-            <Divider />
+            {showDivider && <Divider />}
+            {/* <Divider /> */}
             <View style={styles.weatherContainer}>
                 <View>
                     <Text style={styles.text}>
                         {condition}
                         {/* {weatherData?.current?.condition.text} */}
                     </Text>
-                    <Text style={styles.text}>{`${weatherData?.current?.temp_c}°C`}</Text>
+                    <Text style={styles.text}>{`${temperature}°C`}</Text>
+                    {/* <Text style={styles.text}>{`${weatherData?.current?.temp_c}°C`}</Text> */}
                 </View>
                 <Image
                     style={styles.square}
@@ -25,22 +27,30 @@ const FutureForecast = ({ weatherData, dateTitle, condition, }) => {
                     })?.dayIconImage}
                 />
             </View>
-            <Divider />
-            <View style={styles.feelsLikeContainer}>
-                <Text style={styles.feelsLikeLabel}>Feels Like:</Text>
-                <Text style={styles.feelsLikeValue}>
-                    {`${weatherData?.current?.feelslike_c}°C`}
-                </Text>
-            </View>
+            {showDivider && <Divider />}
+            {/* <Divider /> */}
+            {!!feelsLike && (
+                <View style={styles.feelsLikeContainer}>
+                    <Text style={styles.feelsLikeLabel}>Feels Like:</Text>
+                    <Text style={styles.feelsLikeValue}>
+                        {`${feelsLike}°C`}
+                        {/* {`${weatherData?.current?.feelslike_c}°C`} */}
+                    </Text>
+                </View>
+            )}
             <View style={styles.temperatureContainer}>
                 <Text style={styles.text}>
-                    Min: {`${weatherData?.forecast?.forecastday?.[0]?.day?.mintemp_c}°C`}
+                    Min: {`${minTemp}°C`}
+                    {/* Min: {`${weatherData?.forecast?.forecastday?.[0]?.day?.mintemp_c}°C`} */}
                 </Text>
                 <Text style={styles.text}>
-                    Max: {`${weatherData?.forecast?.forecastday?.[0]?.day?.maxtemp_c}°C`}
+                    Max: {`${maxTemp}°C`}
+                    {/* Max: {`${weatherData?.forecast?.forecastday?.[0]?.day?.maxtemp_c}°C`} */}
                 </Text>
             </View>
-        </View>
+            {showLastDivider && <Divider />}
+            {/* <Divider /> */}
+        </View >
     )
 }
 

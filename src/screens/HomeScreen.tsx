@@ -41,7 +41,7 @@ const HomeScreen = ({ navigation, route }) => {
 
     useEffect(() => {
         const getData = async () => {
-            const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=1e6c3383411a4a98aa4132232241112&q=${selectedCity}&days=7`);
+            const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=1e6c3383411a4a98aa4132232241112&q=${selectedCity}&days=14`);
             const data = await response.json();
             setWeatherData(data);
         };
@@ -99,6 +99,12 @@ const HomeScreen = ({ navigation, route }) => {
                 weatherData={weatherData}
                 dateTitle={"Today"}
                 condition={weatherData?.current?.condition.text}
+                showDivider={true}
+                temperature={weatherData?.current?.temp_c}
+                feelsLike={weatherData?.current?.feelslike_c}
+                minTemp={weatherData?.forecast?.forecastday?.[0]?.day?.mintemp_c}
+                maxTemp={weatherData?.forecast?.forecastday?.[0]?.day?.maxtemp_c}
+                showLastDivider={true}
             />
             {/* <View style={styles.feelsLikeContainer}>
                 <Text style={styles.feelsLikeLabel}>Feels Like:</Text>
@@ -114,7 +120,6 @@ const HomeScreen = ({ navigation, route }) => {
                     Max: {`${weatherData?.forecast?.forecastday?.[0]?.day?.maxtemp_c}°C`}
                 </Text>
             </View> */}
-            <Divider />
             <HourTemperatureInfo weatherData={weatherData} />
             <ForecastButton navigation={navigation} selectedCity={selectedCity} id={23} />
             <View style={styles.footerContainer}>
@@ -135,7 +140,6 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         padding: SPACE_LARGE,
-        paddingTop: 80,
         flexGrow: 1,
     },
     searchCity: {
@@ -157,7 +161,6 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: '700',
         paddingVertical: SPACE_MEDIUM / 2,
-        // borderWidth: 2,
     },
     weatherContainer: {
         justifyContent: 'space-evenly',
