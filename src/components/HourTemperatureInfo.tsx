@@ -7,7 +7,9 @@ import { ACCENT } from '../constants/COLORS'
 const HourTemperatureInfo = ({ weatherData }) => {
     return (
         <View>
-            <ScrollView style={styles.horizontalScroll} contentContainerStyle={styles.horizontalContentScroll}
+            <ScrollView
+                style={styles.horizontalScroll}
+                contentContainerStyle={styles.horizontalContentScroll}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}>
                 {weatherData?.forecast?.forecastday?.[0]?.hour.map(hour => (
@@ -23,9 +25,10 @@ const HourTemperatureInfo = ({ weatherData }) => {
                             {hour.time.split(' ')[1]}
                         </Text>
                     </View>
-                ))}
-            </ScrollView>
-        </View>
+                ))
+                }
+            </ScrollView >
+        </View >
     )
 }
 
