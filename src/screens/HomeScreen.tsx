@@ -1,5 +1,4 @@
 import {
-    Image,
     Keyboard,
     Pressable,
     ScrollView,
@@ -9,31 +8,29 @@ import {
     View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { ACCENT, PRIMARY, SECONDARY } from '../constants/COLORS';
+import { ACCENT, PRIMARY, } from '../constants/COLORS';
 import {
-    FONT_LARGE,
     FONT_MEDIUM,
-    RADIUS_SMALL,
     SPACE_LARGE,
     SPACE_MEDIUM,
     SPACE_SMALL,
-    SPACE_XSMALL,
 } from '../constants/LAYOUT';
 import Divider from '../components/Divider';
 import { CITIES } from '../constants/CITIES';
-import moment from 'moment';
-import { CLOUDS } from '../constants/CLOUDS';
 import SunriseInfo from '../components/SunriseInfo';
 import LatLonInfo from '../components/LatLonInfo';
 import HourTemperatureInfo from '../components/HourTemperatureInfo';
 import ForecastButton from '../components/ForecastButton';
 import FutureForecast from '../components/FutureForecast';
+import FavoritesCities from '../components/FavoritesCities';
 
-const HomeScreen = ({ navigation, route }) => {
+const HomeScreen = ({ navigation }) => {
     const [searchTerm, setSearchTerm] = useState('Bucuresti');
     const [focused, setFocused] = useState(false);
     const [weatherData, setWeatherData] = useState(null);
     const [selectedCity, setSelectedCity] = useState('Bucuresti')
+    const [favourites, setFavourites] = useState([])
+
 
     const filteredCities = CITIES.filter(city => {
         return city.nume.toLowerCase().includes(searchTerm.toLowerCase());
@@ -105,6 +102,10 @@ const HomeScreen = ({ navigation, route }) => {
                 minTemp={weatherData?.forecast?.forecastday?.[0]?.day?.mintemp_c}
                 maxTemp={weatherData?.forecast?.forecastday?.[0]?.day?.maxtemp_c}
                 showLastDivider={true}
+                showFavorites={true}
+                setFavourites={setFavourites}
+                selectedCity={selectedCity}
+                favourites={favourites}
             />
             {/* <View style={styles.feelsLikeContainer}>
                 <Text style={styles.feelsLikeLabel}>Feels Like:</Text>
@@ -122,12 +123,18 @@ const HomeScreen = ({ navigation, route }) => {
             </View> */}
             <HourTemperatureInfo weatherData={weatherData} />
             <ForecastButton navigation={navigation} selectedCity={selectedCity} id={23} />
+            <FavoritesCities
+                favourites={favourites}
+                setFavourites={setFavourites}
+                setSelectedCity={setSelectedCity}
+                setSearchTerm={setSearchTerm}
+            />
             <View style={styles.footerContainer}>
                 <SunriseInfo weatherData={weatherData} />
                 <Divider />
                 <LatLonInfo weatherData={weatherData} />
             </View>
-        </ScrollView>
+        </ScrollView >
     );
 };
 

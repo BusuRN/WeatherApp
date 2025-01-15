@@ -35,6 +35,7 @@ const FutureForecastScreen = ({ route }) => {
                     minTemp={item.day.mintemp_c}
                     maxTemp={item.day.maxtemp_c}
                     showLastDivider={index < weatherData?.forecast?.forecastday.length - 1}
+                    showFavorites={false}
                 />
             })}
 

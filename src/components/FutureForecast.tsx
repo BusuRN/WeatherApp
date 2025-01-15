@@ -1,14 +1,42 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Divider from './Divider'
 import { CLOUDS } from '../constants/CLOUDS'
-import { ACCENT } from '../constants/COLORS'
+import { ACCENT, WHITE } from '../constants/COLORS'
+import RNVectorIcon from './RNVectorIcon'
 
 
-const FutureForecast = ({ weatherData, dateTitle, condition, showDivider, temperature, feelsLike, minTemp, maxTemp, showLastDivider }) => {
+const FutureForecast = ({ weatherData, dateTitle, condition, showDivider,
+    temperature, feelsLike, minTemp, maxTemp, showLastDivider, showFavorites,
+    setFavourites, selectedCity, favourites }) => {
     return (
         <View>
-            <Text style={styles.text}>{dateTitle}</Text>
+            <View style={styles.titleRow}>
+                <Text style={styles.text}>{dateTitle}</Text>
+                {showFavorites && (
+                    <Pressable style={styles.favorites}
+                        onPress={() => {
+                            if (favourites.includes(selectedCity)) {
+                                const newFavourites = favourites.filter((item) => {
+                                    return item != selectedCity
+                                })
+                                setFavourites(newFavourites)
+                            } else {
+                                setFavourites([...favourites, selectedCity])
+
+                            }
+                        }}
+                    >
+                        <RNVectorIcon
+                            name={favourites.includes(selectedCity) ? "heart" : "hearto"}
+                            family='AntDesign'
+                            size={30}
+                            color={WHITE}
+                        />
+                    </Pressable>
+                )}
+
+            </View>
             {showDivider && <Divider />}
             {/* <Divider /> */}
             <View style={styles.weatherContainer}>
@@ -29,15 +57,17 @@ const FutureForecast = ({ weatherData, dateTitle, condition, showDivider, temper
             </View>
             {showDivider && <Divider />}
             {/* <Divider /> */}
-            {!!feelsLike && (
-                <View style={styles.feelsLikeContainer}>
-                    <Text style={styles.feelsLikeLabel}>Feels Like:</Text>
-                    <Text style={styles.feelsLikeValue}>
-                        {`${feelsLike}°C`}
-                        {/* {`${weatherData?.current?.feelslike_c}°C`} */}
-                    </Text>
-                </View>
-            )}
+            {
+                !!feelsLike && (
+                    <View style={styles.feelsLikeContainer}>
+                        <Text style={styles.feelsLikeLabel}>Feels Like:</Text>
+                        <Text style={styles.feelsLikeValue}>
+                            {`${feelsLike}°C`}
+                            {/* {`${weatherData?.current?.feelslike_c}°C`} */}
+                        </Text>
+                    </View>
+                )
+            }
             <View style={styles.temperatureContainer}>
                 <Text style={styles.text}>
                     Min: {`${minTemp}°C`}
@@ -62,12 +92,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    titleRow: {
+        justifyContent: 'center',
+    },
     text: {
         color: ACCENT,
         fontSize: 24,
         marginVertical: 10,
         fontWeight: '700',
         textAlign: 'center',
+        alignSelf: 'center',
+    },
+    favorites: {
+        flexDirection: 'row',
+        position: 'absolute',
+        alignSelf: 'flex-end',
     },
     square: {
         width: 75,
