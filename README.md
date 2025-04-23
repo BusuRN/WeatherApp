@@ -1,6 +1,6 @@
 # 🌤️ WeatherApp (React Native)
 
-A mobile weather app for tracking real-time conditions and **14-day forecasts** for cities worldwide.  
+A mobile weather app for tracking real-time conditions and **3-day forecasts** for cities worldwide.  
 Includes search functionality, detailed forecasts, favorites management, and persistent local storage.
 
 ## 📘 Overview
@@ -83,7 +83,6 @@ yarn android or yarn ios
 - Implement air quality index details (full support)
 - Add better error handling (e.g., for no network or API errors)
 - Add location-based weather (GPS support)
-- Add location-based weather (GPS support)
 
 
 ## 👤 Author
@@ -95,6 +94,5 @@ Made by **Andrei** — Junior React Native Developer passionate about clean UI, 
 
 Feel free to reach out:
 
-- GitHub: (https://github.com/BusuRN)
 - LinkedIn: (https://www.linkedin.com/in/andrei-busuioc-b692b02aa/)
 - Email: andreialexandrubusuioc@outlook.com
