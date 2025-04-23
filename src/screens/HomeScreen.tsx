@@ -23,13 +23,16 @@ import HourTemperatureInfo from '../components/HourTemperatureInfo';
 import ForecastButton from '../components/ForecastButton';
 import FutureForecast from '../components/FutureForecast';
 import FavoritesCities from '../components/FavoritesCities';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import capitalizedFirstLetter from '../utils/capitalizedFirstLetter';
 
 const HomeScreen = ({ navigation }) => {
     const [searchTerm, setSearchTerm] = useState('Bucuresti');
     const [focused, setFocused] = useState(false);
     const [weatherData, setWeatherData] = useState(null);
     const [selectedCity, setSelectedCity] = useState('Bucuresti')
-    const [favourites, setFavourites] = useState([])
+    const [didInitialize, setDidInitialize] = useState(false)
+    const [favourites, setFavourites] = useState<string[]>([])
 
 
     const filteredCities = CITIES.filter(city => {
@@ -44,6 +47,48 @@ const HomeScreen = ({ navigation }) => {
         };
         getData();
     }, [selectedCity]);
+
+    useEffect(() => {
+        const getAsyncData = async () => {
+            const stringValue = await AsyncStorage.getItem("favourites")
+            setFavourites(JSON.parse(stringValue))
+            console.log(JSON.parse(stringValue))
+        }
+        getAsyncData();
+    }, [])
+
+    useEffect(() => {
+        const saveLastCity = async () => {
+            console.log("selectedCity", selectedCity);
+            if (!didInitialize) {
+                return
+            }
+            await AsyncStorage.setItem('lastCity', selectedCity)
+        }
+        saveLastCity()
+    }, [selectedCity, didInitialize])
+
+
+    useEffect(() => {
+        const loadLastCity = async () => {
+            const lastCity = await AsyncStorage.getItem('lastCity')
+
+            console.log("lastCity", lastCity);
+
+            if (lastCity) {
+
+                setSelectedCity(lastCity)
+                setSearchTerm(capitalizedFirstLetter(lastCity))
+            }
+            setDidInitialize(true)
+        }
+        loadLastCity()
+    }, [])
+
+
+
+
+
 
 
     return (
@@ -106,6 +151,9 @@ const HomeScreen = ({ navigation }) => {
                 setFavourites={setFavourites}
                 selectedCity={selectedCity}
                 favourites={favourites}
+                conditionCode={weatherData?.current?.condition?.code}
+                isDay={weatherData?.current?.is_day}
+
             />
             {/* <View style={styles.feelsLikeContainer}>
                 <Text style={styles.feelsLikeLabel}>Feels Like:</Text>
@@ -129,6 +177,23 @@ const HomeScreen = ({ navigation }) => {
                 setSelectedCity={setSelectedCity}
                 setSearchTerm={setSearchTerm}
             />
+            {/* <Pressable style={{ backgroundColor: "teal", padding: 20, }}
+                onPress={async () => {
+                    await AsyncStorage.setItem("player", JSON.stringify({ name: "Busuioc", age: 44, level: 12 }))
+                }}
+            >
+                <Text>Save Data</Text>
+            </Pressable> */}
+            {/* <Pressable style={{ backgroundColor: "pink", padding: 20 }}
+                onPress={async () => {
+                    const stringValue = await AsyncStorage.getItem("favourites")
+                    setFavourites(JSON.parse(stringValue))
+
+                    console.log(JSON.parse(stringValue))
+                }}
+            >
+                <Text>Get Data</Text>
+            </Pressable> */}
             <View style={styles.footerContainer}>
                 <SunriseInfo weatherData={weatherData} />
                 <Divider />

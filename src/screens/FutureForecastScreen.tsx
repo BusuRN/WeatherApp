@@ -27,7 +27,7 @@ const FutureForecastScreen = ({ route }) => {
             {weatherData?.forecast?.forecastday?.map((item, index) => {
                 console.log(item)
                 return <FutureForecast
-                    weatherData={weatherData}
+                    key={item.date}
                     dateTitle={item.date}
                     condition={item?.day?.condition?.text}
                     showDivider={false}
@@ -36,6 +36,7 @@ const FutureForecastScreen = ({ route }) => {
                     maxTemp={item.day.maxtemp_c}
                     showLastDivider={index < weatherData?.forecast?.forecastday.length - 1}
                     showFavorites={false}
+                    conditionCode={item.day?.condition?.code}
                 />
             })}
 

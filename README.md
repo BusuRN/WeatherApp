@@ -1,79 +1,100 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🌤️ WeatherApp (React Native)
 
-# Getting Started
+A mobile weather app for tracking real-time conditions and **14-day forecasts** for cities worldwide.  
+Includes search functionality, detailed forecasts, favorites management, and persistent local storage.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## 📘 Overview
 
-## Step 1: Start the Metro Server
+This app is built for users who want **quick and easy access** to weather data with a clean and intuitive UI.
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+Users can:
+- Search for any city and view **current weather details**
+- See a **3-day forecast** with daily breakdowns
+- Save **favorite cities** for quick access
+- View **sunrise/sunset times** and **latitude/longitude**
+- Navigate seamlessly between screens using a **stack navigator**
 
-To start Metro, run the following command from the _root_ of your React Native project:
+## ✨ Features
+
+- 🔎 **Search** for any city worldwide
+- 📅 **3-day forecast** with daily weather details
+- ❤️ **Favorites management** for cities (stored locally)
+- 🌅 **Sunrise & sunset times**, **latitude & longitude**
+- 🌤️ **Dynamic weather icons** based on condition codes and time (day/night)
+- 🔁 **Persistent storage** of favorites and last viewed city using **AsyncStorage**
+- 🧭 Smooth **navigation** between Home, Forecast, and Air Quality screens
+
+## 🈶 What You Learn
+
+The app showcases **real-world integration** with an external API, **state management**, and **persistent local storage** using React Native.
+
+Key concepts:
+- **API calls** to fetch real-time data from **WeatherAPI**
+- **Favorites management** with **AsyncStorage**
+- **Conditional rendering** based on API responses (like dynamic icons)
+- **Navigation** between multiple screens (Home, Forecast, Air Quality)
+- **Search functionality** with filtered results
+
+Each weather report includes:
+- Temperature (current, feels like, min/max)
+- Weather conditions (e.g., sunny, cloudy)
+- Forecast data (daily breakdown for 14 days)
+- Additional details like **sunrise/sunset** and **coordinates**
+
+## 📸 Screenshots
+
+<div align="center">
+  <img src="./screenshots/weatherHome.png" width="200"/>
+  <img src="./screenshots/Forecast.png" width="200"/>
+  <img src="./screenshots/SearchFeature.png" width="200"/>
+</div>
+
+
+### 📦 Install Dependencies
 
 ```bash
-# using npm
-npm start
+npm install
+```
 
-# OR using Yarn
+## 🚀 Running the Project
+
+Before you begin, make sure your environment is set up for React Native:
+👉 React Native - Environment Setup
+
+
+To get started, follow these steps:
+```bash
 yarn start
+yarn android or yarn ios
 ```
 
-## Step 2: Start your Application
+## 🧰 Tech Stack
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+- **React Native** `0.76.x`
+- **TypeScript** `5.x`
+- **React Navigation** – stack navigation between screens
+- **WeatherAPI** – xternal service for weather data
+- **Axios / fetch** – API calls to WeatherAPI
+- **Async Storage** – for persistent local data
 
-### For Android
+## 📌 Future Improvements
 
-```bash
-# using npm
-npm run android
+- Add dark mode
+- Implement air quality index details (full support)
+- Add better error handling (e.g., for no network or API errors)
+- Add location-based weather (GPS support)
+- Add location-based weather (GPS support)
 
-# OR using Yarn
-yarn android
-```
 
-### For iOS
+## 👤 Author
 
-```bash
-# using npm
-npm run ios
+Made by **Andrei** — Junior React Native Developer passionate about clean UI, educational tools, and leveling up fast.
 
-# OR using Yarn
-yarn ios
-```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+## ✉️ Contact
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+Feel free to reach out:
 
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- GitHub: (https://github.com/BusuRN)
+- LinkedIn: (https://www.linkedin.com/in/andrei-busuioc-b692b02aa/)
+- Email: andreialexandrubusuioc@outlook.com
