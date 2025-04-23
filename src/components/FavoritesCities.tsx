@@ -1,7 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import { ACCENT, SECONDARY } from '../constants/COLORS'
-import { FONT_LARGE, RADIUS_LARGE, RADIUS_SMALL, RADIUS_XXLARGE, SPACE_LARGE, SPACE_SMALL } from '../constants/LAYOUT'
+import { FONT_LARGE, RADIUS_LARGE, RADIUS_SMALL, RADIUS_XXLARGE, SPACE_LARGE, SPACE_SMALL, SPACE_XLARGE, SPACE_XXLARGE } from '../constants/LAYOUT'
 import capitalizedFirstLetter from '../utils/capitalizedFirstLetter'
 
 
@@ -15,7 +15,7 @@ const FavoritesCities = ({ favourites, setFavourites, setSelectedCity, setSearch
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
             >
-                {favourites.map((city) => {
+                {favourites?.map((city) => {
                     return (
                         <Pressable
                             style={styles.favoritesContainer}
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     },
     horizontalContentScroll: {
         paddingHorizontal: SPACE_SMALL,
+        marginTop: 80,
     },
     favoritesContainer: {
         backgroundColor: SECONDARY,

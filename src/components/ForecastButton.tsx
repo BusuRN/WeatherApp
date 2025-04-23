@@ -16,7 +16,7 @@ const ForecastButton = ({ navigation, selectedCity, id }) => {
             style={styles.forecastContainer}>
             <Text style={styles.forecastValue}
             >
-                14 days forecast
+                3 days forecast
             </Text>
         </Pressable>
     )

@@ -12,20 +12,33 @@ const HourTemperatureInfo = ({ weatherData }) => {
                 contentContainerStyle={styles.horizontalContentScroll}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}>
-                {weatherData?.forecast?.forecastday?.[0]?.hour.map(hour => (
-                    <View style={styles.weatherHourContainer} key={hour.time}>
-                        <Text style={styles.weatherHourText}>{`${hour.temp_c}°C`}</Text>
-                        <Image
-                            style={styles.smallSquare}
-                            source={CLOUDS.find((item) => {
-                                return item.code === hour?.condition?.code
-                            })?.dayIconImage}
-                        />
-                        <Text style={styles.weatherHourText}>
-                            {hour.time.split(' ')[1]}
-                        </Text>
-                    </View>
-                ))
+                {weatherData?.forecast?.forecastday?.[0]?.hour.map(hour => {
+                    const isDay = hour?.is_day
+                    return (
+                        <View style={styles.weatherHourContainer} key={hour.time}>
+                            <Text style={styles.weatherHourText}>{`${hour.temp_c}°C`}</Text>
+
+                            {isDay === 1 ? (
+                                <Image
+                                    style={styles.smallSquare}
+                                    source={CLOUDS.find((item) => {
+                                        return item.code === hour?.condition?.code
+                                    })?.dayIconImage}
+                                />
+                            ) : (
+                                <Image
+                                    style={styles.smallSquare}
+                                    source={CLOUDS.find((item) => {
+                                        return item.code === hour?.condition?.code
+                                    })?.nightIconImage}
+                                />
+                            )}
+                            <Text style={styles.weatherHourText}>
+                                {hour.time.split(' ')[1]}
+                            </Text>
+                        </View>
+                    )
+                })
                 }
             </ScrollView >
         </View >
