@@ -5,6 +5,7 @@ import { CLOUDS } from '../constants/CLOUDS'
 import { ACCENT, WHITE } from '../constants/COLORS'
 import RNVectorIcon from './RNVectorIcon'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import formatTemperature from '../utils/formatTemperature'
 
 
 interface FutureForecastProps {
@@ -73,7 +74,7 @@ const FutureForecast: FC<FutureForecastProps> = ({ dateTitle, condition, showDiv
                         {condition}
                         {/* {weatherData?.current?.condition.text} */}
                     </Text>
-                    <Text style={styles.text}>{`${temperature}°C`}</Text>
+                    <Text style={styles.text}>{formatTemperature(temperature)}</Text>
                     {/* <Text style={styles.text}>{`${weatherData?.current?.temp_c}°C`}</Text> */}
                 </View>
 
@@ -108,11 +109,11 @@ const FutureForecast: FC<FutureForecastProps> = ({ dateTitle, condition, showDiv
             }
             <View style={styles.temperatureContainer}>
                 <Text style={styles.text}>
-                    Min: {`${minTemp}°C`}
+                    Min: {formatTemperature(minTemp)}
                     {/* Min: {`${weatherData?.forecast?.forecastday?.[0]?.day?.mintemp_c}°C`} */}
                 </Text>
                 <Text style={styles.text}>
-                    Max: {`${maxTemp}°C`}
+                    Max: {formatTemperature(maxTemp)}
                     {/* Max: {`${weatherData?.forecast?.forecastday?.[0]?.day?.maxtemp_c}°C`} */}
                 </Text>
             </View>
