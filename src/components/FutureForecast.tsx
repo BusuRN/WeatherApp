@@ -42,18 +42,19 @@ const FutureForecast: FC<FutureForecastProps> = ({ dateTitle, condition, showDiv
                             bottom: 30,
                         }}
 
-                        onPress={() => {
+                        onPress={async () => {
+                            if (!selectedCity) return;
 
-                            if (selectedCity && favourites?.includes(selectedCity)) {
-                                const newFavourites = favourites.filter((item) => {
-                                    return item != selectedCity
-                                })
-                                setFavourites(newFavourites)
-                            } else if (favourites && selectedCity) {
-                                setFavourites([...favourites, selectedCity])
-                                AsyncStorage.setItem("favourites", JSON.stringify([...favourites, selectedCity]))
+                            let updatedFavourites = [];
 
+                            if (favourites?.includes(selectedCity)) {
+                                updatedFavourites = favourites.filter(item => item !== selectedCity);
+                            } else {
+                                updatedFavourites = [...(favourites || []), selectedCity];
                             }
+                            setFavourites(updatedFavourites);
+
+                            await AsyncStorage.setItem("favourites", JSON.stringify(updatedFavourites));
                         }}
                     >
                         <RNVectorIcon
