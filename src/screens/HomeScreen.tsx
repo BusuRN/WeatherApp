@@ -15,6 +15,7 @@ import {
     SPACE_MEDIUM,
     SPACE_SMALL,
 } from '../constants/LAYOUT';
+import { ActivityIndicator } from 'react-native';
 import Divider from '../components/Divider';
 import { CITIES } from '../constants/CITIES';
 import SunriseInfo from '../components/SunriseInfo';
@@ -33,20 +34,13 @@ const HomeScreen = ({ navigation }) => {
     const [selectedCity, setSelectedCity] = useState('Bucuresti')
     const [didInitialize, setDidInitialize] = useState(false)
     const [favourites, setFavourites] = useState<string[]>([])
+    const [loading, setLoading] = useState(true);
 
 
     const filteredCities = CITIES.filter(city => {
         return city.nume.toLowerCase().includes(searchTerm.toLowerCase());
     }).splice(0, 6);
 
-    useEffect(() => {
-        const getData = async () => {
-            const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=1e6c3383411a4a98aa4132232241112&q=${selectedCity}&days=14`);
-            const data = await response.json();
-            setWeatherData(data);
-        };
-        getData();
-    }, [selectedCity]);
 
     useEffect(() => {
         const getAsyncData = async () => {
@@ -85,10 +79,27 @@ const HomeScreen = ({ navigation }) => {
         loadLastCity()
     }, [])
 
+    useEffect(() => {
+        const getData = async () => {
+            setLoading(true); // Start loading
+            const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=1e6c3383411a4a98aa4132232241112&q=${selectedCity}&days=14`);
+            const data = await response.json();
+            setWeatherData(data);
+            setLoading(false); // Stop loading
+        };
+        getData();
+    }, [selectedCity]);
 
 
 
 
+    if (loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: PRIMARY }}>
+                <ActivityIndicator size="large" color={ACCENT} />
+            </View>
+        );
+    }
 
 
     return (
