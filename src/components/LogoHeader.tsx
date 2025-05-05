@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
         backgroundColor: PRIMARY,
     },
     logo: {
-        width: 70,
+        width: 80,
         height: 40,
         resizeMode: 'contain',
     },
