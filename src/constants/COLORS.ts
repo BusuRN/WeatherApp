@@ -1,5 +1,5 @@
-export const PRIMARY = '#2F2F2F';
-export const SECONDARY = '#455F65';
-export const ACCENT = '#D7DCD3';
+export const PRIMARY = '#000000';
+export const SECONDARY = '#222222';
+export const ACCENT = '#FFFFFF';
 export const WHITE = '#FFFFFF';
 export const BLACK = '#000000';
