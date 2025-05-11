@@ -1,24 +1,27 @@
-const getCityImageUrl = async (cityName: string): Promise<string | null> => {
-    try {
-      const formattedCity = cityName.trim().replace(/\s+/g, '_'); // Replace spaces with underscores
-      const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${formattedCity}`);
+const getCityImageUrl = async (city: string): Promise<string | null> => {
+  try {
+    const title = encodeURIComponent(city);
 
-      if (!response.ok) {
-        console.warn('Wikipedia request failed:', response.status);
-        return null;
-      }
+    // Step 1: Get the Wikipedia page for the city
+    const summaryResponse = await fetch(
+      `https://en.wikipedia.org/api/rest_v1/page/summary/${title}`
+    );
 
-      const data = await response.json();
-
-      if (data?.thumbnail?.source) {
-        return data.thumbnail.source;
-      } else {
-        return null;
-      }
-    } catch (error) {
-      console.error('Error fetching city image:', error);
+    if (!summaryResponse.ok) {
+      console.warn(`No Wikipedia summary for ${city}`);
       return null;
     }
-  };
 
-  export default getCityImageUrl;
+    const summaryData = await summaryResponse.json();
+
+    // Step 2: Get the image URL from the response
+    const imageUrl = summaryData?.originalimage?.source;
+
+    return imageUrl || null;
+  } catch (error) {
+    console.error('Failed to fetch city image:', error);
+    return null;
+  }
+};
+
+export default getCityImageUrl;
