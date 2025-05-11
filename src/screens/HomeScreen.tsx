@@ -1,4 +1,6 @@
+import getCityImageUrl from '../utils/getCityImageUrl';
 import {
+    ImageBackground,
     Keyboard,
     Pressable,
     ScrollView,
@@ -6,6 +8,7 @@ import {
     Text,
     TextInput,
     View,
+    ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { ACCENT, PRIMARY } from '../constants/COLORS';
@@ -15,7 +18,6 @@ import {
     SPACE_MEDIUM,
     SPACE_SMALL,
 } from '../constants/LAYOUT';
-import { ActivityIndicator } from 'react-native';
 import Divider from '../components/Divider';
 import { CITIES } from '../constants/CITIES';
 import SunriseInfo from '../components/SunriseInfo';
@@ -35,6 +37,7 @@ const HomeScreen = ({ navigation }) => {
     const [didInitialize, setDidInitialize] = useState(false);
     const [favourites, setFavourites] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
+    const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
 
     const filteredCities = CITIES.filter(city =>
         city.nume.toLowerCase().includes(searchTerm.toLowerCase())
@@ -71,15 +74,20 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         const getData = async () => {
             setLoading(true);
+
             const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=1e6c3383411a4a98aa4132232241112&q=${selectedCity}&days=14`);
             const data = await response.json();
             setWeatherData(data);
             setLoading(false);
+
+            const cityImage = await getCityImageUrl(selectedCity);
+            setBackgroundImage(cityImage);
         };
+
         getData();
     }, [selectedCity]);
 
-    if (loading) {
+    if (loading || !backgroundImage) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: PRIMARY }}>
                 <ActivityIndicator size="large" color={ACCENT} />
@@ -88,79 +96,94 @@ const HomeScreen = ({ navigation }) => {
     }
 
     return (
-        <ScrollView
-            showsVerticalScrollIndicator={false}
-            style={styles.scroll}
-            contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="handled"
+        <ImageBackground
+            source={{ uri: backgroundImage }}
+            style={styles.backgroundImage}
+            resizeMode="cover"
         >
-            <View style={styles.searchCity}>
-                <TextInput
-                    style={styles.searchBar}
-                    placeholder="Search"
-                    placeholderTextColor={`${ACCENT}80`}
-                    selectionColor={ACCENT}
-                    value={searchTerm}
-                    onChangeText={(text) => {
-                        setSearchTerm(text);
-                    }}
-                    onFocus={() => setFocused(true)}
-                    onBlur={() => setFocused(false)}
+            <View style={styles.overlay} />
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                style={styles.scroll}
+                contentContainerStyle={styles.scrollContent}
+                keyboardShouldPersistTaps="handled"
+            >
+                <View style={styles.searchCity}>
+                    <TextInput
+                        style={styles.searchBar}
+                        placeholder="Search"
+                        placeholderTextColor={`${ACCENT}80`}
+                        selectionColor={ACCENT}
+                        value={searchTerm}
+                        onChangeText={(text) => setSearchTerm(text)}
+                        onFocus={() => setFocused(true)}
+                        onBlur={() => setFocused(false)}
+                    />
+                    {focused && filteredCities.map(city => (
+                        <Pressable
+                            key={city.nume}
+                            onPress={() => {
+                                setSelectedCity(city.slug);
+                                setSearchTerm(city.nume);
+                                setFocused(false);
+                                Keyboard.dismiss();
+                            }}
+                        >
+                            <Text style={styles.searchResult}>{city.nume}</Text>
+                        </Pressable>
+                    ))}
+                </View>
+
+                <FutureForecast
+                    weatherData={weatherData}
+                    dateTitle={"Today"}
+                    condition={weatherData?.current?.condition.text}
+                    showDivider={true}
+                    temperature={weatherData?.current?.temp_c}
+                    feelsLike={weatherData?.current?.feelslike_c}
+                    minTemp={weatherData?.forecast?.forecastday?.[0]?.day?.mintemp_c}
+                    maxTemp={weatherData?.forecast?.forecastday?.[0]?.day?.maxtemp_c}
+                    showLastDivider={true}
+                    showFavorites={true}
+                    setFavourites={setFavourites}
+                    selectedCity={selectedCity}
+                    favourites={favourites}
+                    conditionCode={weatherData?.current?.condition?.code}
+                    is_day={weatherData?.current?.is_day}
                 />
-                {focused && filteredCities.map(city => (
-                    <Pressable
-                        key={city.nume}
-                        onPress={() => {
-                            setSelectedCity(city.slug);
-                            setSearchTerm(city.nume);
-                            setFocused(false);
-                            Keyboard.dismiss();
-                        }}
-                    >
-                        <Text style={styles.searchResult}>{city.nume}</Text>
-                    </Pressable>
-                ))}
-            </View>
-            <FutureForecast
-                weatherData={weatherData}
-                dateTitle={"Today"}
-                condition={weatherData?.current?.condition.text}
-                showDivider={true}
-                temperature={weatherData?.current?.temp_c}
-                feelsLike={weatherData?.current?.feelslike_c}
-                minTemp={weatherData?.forecast?.forecastday?.[0]?.day?.mintemp_c}
-                maxTemp={weatherData?.forecast?.forecastday?.[0]?.day?.maxtemp_c}
-                showLastDivider={true}
-                showFavorites={true}
-                setFavourites={setFavourites}
-                selectedCity={selectedCity}
-                favourites={favourites}
-                conditionCode={weatherData?.current?.condition?.code}
-                is_day={weatherData?.current?.is_day}
-            />
-            <HourTemperatureInfo weatherData={weatherData} />
-            <ForecastButton navigation={navigation} selectedCity={selectedCity} id={23} />
-            <FavoritesCities
-                favourites={favourites}
-                setFavourites={setFavourites}
-                setSelectedCity={setSelectedCity}
-                setSearchTerm={setSearchTerm}
-            />
-            <View style={styles.footerContainer}>
-                <SunriseInfo weatherData={weatherData} />
-                <Divider />
-                <LatLonInfo weatherData={weatherData} />
-            </View>
-        </ScrollView>
+
+                <HourTemperatureInfo weatherData={weatherData} />
+                <ForecastButton navigation={navigation} selectedCity={selectedCity} id={23} />
+                <FavoritesCities
+                    favourites={favourites}
+                    setFavourites={setFavourites}
+                    setSelectedCity={setSelectedCity}
+                    setSearchTerm={setSearchTerm}
+                />
+                <View style={styles.footerContainer}>
+                    <SunriseInfo weatherData={weatherData} />
+                    <Divider />
+                    <LatLonInfo weatherData={weatherData} />
+                </View>
+            </ScrollView>
+        </ImageBackground>
     );
 };
 
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-    scroll: {
-        backgroundColor: PRIMARY,
+    backgroundImage: {
         flex: 1,
+    },
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 1,
+    },
+    scroll: {
+        flex: 1,
+        zIndex: 2,
     },
     scrollContent: {
         padding: SPACE_LARGE,
@@ -172,16 +195,17 @@ const styles = StyleSheet.create({
         borderColor: ACCENT,
         width: '100%',
         padding: SPACE_MEDIUM,
+        backgroundColor: 'rgba(0,0,0,0.5)',
     },
     searchBar: {
-        color: ACCENT,
+        color: 'white',
         padding: SPACE_MEDIUM,
         fontWeight: '600',
         fontSize: 22,
         margin: -SPACE_MEDIUM,
     },
     searchResult: {
-        color: ACCENT,
+        color: 'white',
         fontSize: 24,
         fontWeight: '700',
         paddingVertical: SPACE_MEDIUM / 2,
