@@ -129,7 +129,7 @@ const HomeScreen = ({ navigation }) => {
 
             <FutureForecast
                 weatherData={weatherData}
-                dateTitle={"Today"}
+                dateTitle={"Tomorrow"}
                 condition={weatherData?.current?.condition.text}
                 showDivider={true}
                 temperature={weatherData?.current?.temp_c}
