@@ -42,7 +42,7 @@ const HomeScreen = ({ navigation }) => {
 
     useEffect(() => {
         const getAsyncData = async () => {
-            const stringValue = await AsyncStorage.getItem("favourites");
+            const stringValue = await AsyncStorage.getItem('favourites');
             if (stringValue) {
                 setFavourites(JSON.parse(stringValue));
             }
@@ -73,15 +73,12 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         const getData = async () => {
             setLoading(true);
-            try {
-                const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=1e6c3383411a4a98aa4132232241112&q=${selectedCity}&days=14`);
-                const data = await response.json();
-                setWeatherData(data);
-            } catch (err) {
-                console.log("Weather API Error:", err);
-            } finally {
-                setLoading(false);
-            }
+            const response = await fetch(
+                `https://api.weatherapi.com/v1/forecast.json?key=1e6c3383411a4a98aa4132232241112&q=${selectedCity}&days=14`
+            );
+            const data = await response.json();
+            setWeatherData(data);
+            setLoading(false);
         };
         getData();
     }, [selectedCity]);
@@ -101,6 +98,11 @@ const HomeScreen = ({ navigation }) => {
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
         >
+            {/* ✅ NEW welcome message */}
+            <Text style={styles.welcomeText}>
+                Welcome! 🌤️ Select a city to see the weather.
+            </Text>
+
             <View style={styles.searchCity}>
                 <TextInput
                     style={styles.searchBar}
@@ -112,24 +114,25 @@ const HomeScreen = ({ navigation }) => {
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                 />
-                {focused && filteredCities.map(city => (
-                    <Pressable
-                        key={city.nume}
-                        onPress={() => {
-                            setSelectedCity(city.slug);
-                            setSearchTerm(city.nume);
-                            setFocused(false);
-                            Keyboard.dismiss();
-                        }}
-                    >
-                        <Text style={styles.searchResult}>{city.nume}</Text>
-                    </Pressable>
-                ))}
+                {focused &&
+                    filteredCities.map(city => (
+                        <Pressable
+                            key={city.nume}
+                            onPress={() => {
+                                setSelectedCity(city.slug);
+                                setSearchTerm(city.nume);
+                                setFocused(false);
+                                Keyboard.dismiss();
+                            }}
+                        >
+                            <Text style={styles.searchResult}>{city.nume}</Text>
+                        </Pressable>
+                    ))}
             </View>
 
             <FutureForecast
                 weatherData={weatherData}
-                dateTitle={"Tomorrow"}
+                dateTitle={'Today'}
                 condition={weatherData?.current?.condition.text}
                 showDivider={true}
                 temperature={weatherData?.current?.temp_c}
@@ -146,9 +149,7 @@ const HomeScreen = ({ navigation }) => {
             />
 
             <HourTemperatureInfo weatherData={weatherData} />
-
             <ForecastButton navigation={navigation} selectedCity={selectedCity} id={23} />
-
             <FavoritesCities
                 favourites={favourites}
                 setFavourites={setFavourites}
@@ -175,6 +176,13 @@ const styles = StyleSheet.create({
     scrollContent: {
         padding: SPACE_LARGE,
         flexGrow: 1,
+    },
+    welcomeText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: ACCENT,
+        marginBottom: 16,
+        textAlign: 'center',
     },
     searchCity: {
         borderWidth: 1.5,
