@@ -85,7 +85,14 @@ const HomeScreen = ({ navigation }) => {
 
     if (loading) {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: PRIMARY }}>
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: PRIMARY,
+                }}
+            >
                 <ActivityIndicator size="large" color={ACCENT} />
             </View>
         );
@@ -98,11 +105,6 @@ const HomeScreen = ({ navigation }) => {
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
         >
-            {/* ✅ NEW welcome message */}
-            <Text style={styles.welcomeText}>
-                Welcome! 🌤️ Select a city to see the weather.
-            </Text>
-
             <View style={styles.searchCity}>
                 <TextInput
                     style={styles.searchBar}
@@ -110,7 +112,7 @@ const HomeScreen = ({ navigation }) => {
                     placeholderTextColor={`${ACCENT}80`}
                     selectionColor={ACCENT}
                     value={searchTerm}
-                    onChangeText={(text) => setSearchTerm(text)}
+                    onChangeText={text => setSearchTerm(text)}
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                 />
@@ -176,13 +178,6 @@ const styles = StyleSheet.create({
     scrollContent: {
         padding: SPACE_LARGE,
         flexGrow: 1,
-    },
-    welcomeText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: ACCENT,
-        marginBottom: 16,
-        textAlign: 'center',
     },
     searchCity: {
         borderWidth: 1.5,
