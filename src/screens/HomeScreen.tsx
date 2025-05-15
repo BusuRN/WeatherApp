@@ -105,9 +105,6 @@ const HomeScreen = ({ navigation }) => {
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
         >
-            {/* ✅ NEW GREETING TEXT */}
-            <Text style={styles.greeting}>Welcome to the Weather App ☀️</Text>
-
             <View style={styles.searchCity}>
                 <TextInput
                     style={styles.searchBar}
@@ -181,13 +178,6 @@ const styles = StyleSheet.create({
     scrollContent: {
         padding: SPACE_LARGE,
         flexGrow: 1,
-    },
-    greeting: {
-        color: ACCENT,
-        fontSize: 26,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: SPACE_MEDIUM,
     },
     searchCity: {
         borderWidth: 1.5,
