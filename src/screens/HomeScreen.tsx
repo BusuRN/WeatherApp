@@ -11,8 +11,10 @@ import {
 import React, { useEffect, useState } from 'react';
 import { ACCENT, PRIMARY } from '../constants/COLORS';
 import {
+    FONT_MEDIUM,
     SPACE_LARGE,
     SPACE_MEDIUM,
+    SPACE_SMALL,
 } from '../constants/LAYOUT';
 import Divider from '../components/Divider';
 import { CITIES } from '../constants/CITIES';
@@ -103,6 +105,9 @@ const HomeScreen = ({ navigation }) => {
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
         >
+            {/* ✅ NEW GREETING TEXT */}
+            <Text style={styles.greeting}>Welcome to the Weather App ☀️</Text>
+
             <View style={styles.searchCity}>
                 <TextInput
                     style={styles.searchBar}
@@ -176,6 +181,13 @@ const styles = StyleSheet.create({
     scrollContent: {
         padding: SPACE_LARGE,
         flexGrow: 1,
+    },
+    greeting: {
+        color: ACCENT,
+        fontSize: 26,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: SPACE_MEDIUM,
     },
     searchCity: {
         borderWidth: 1.5,
