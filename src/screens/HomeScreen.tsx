@@ -162,7 +162,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
     scroll: {
-        backgroundColor: PRIMARY,
+        backgroundColor: "red",
         flex: 1,
     },
     scrollContent: {
