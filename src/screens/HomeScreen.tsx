@@ -162,7 +162,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
     scroll: {
-        backgroundColor: "red",
+        backgroundColor: PRIMARY,
         flex: 1,
     },
     scrollContent: {
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     },
     searchCity: {
         borderWidth: 1.5,
-        borderRadius: 28,
+        borderRadius: 30,
         borderColor: ACCENT,
         width: '100%',
         padding: SPACE_MEDIUM,
