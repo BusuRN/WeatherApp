@@ -6,7 +6,6 @@ import {
     Text,
     TextInput,
     View,
-    ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { ACCENT, PRIMARY } from '../constants/COLORS';
@@ -16,6 +15,7 @@ import {
     SPACE_MEDIUM,
     SPACE_SMALL,
 } from '../constants/LAYOUT';
+import { ActivityIndicator } from 'react-native';
 import Divider from '../components/Divider';
 import { CITIES } from '../constants/CITIES';
 import SunriseInfo from '../components/SunriseInfo';
@@ -33,7 +33,7 @@ const HomeScreen = ({ navigation }) => {
     const [weatherData, setWeatherData] = useState(null);
     const [selectedCity, setSelectedCity] = useState('Bucuresti');
     const [didInitialize, setDidInitialize] = useState(false);
-    const [favourites, setFavourites] = useState<string[]>([]);
+    const [favourites, setFavourites] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const filteredCities = CITIES.filter(city =>
@@ -42,10 +42,8 @@ const HomeScreen = ({ navigation }) => {
 
     useEffect(() => {
         const getAsyncData = async () => {
-            const stringValue = await AsyncStorage.getItem('favourites');
-            if (stringValue) {
-                setFavourites(JSON.parse(stringValue));
-            }
+            const stringValue = await AsyncStorage.getItem("favourites");
+            setFavourites(JSON.parse(stringValue) || []);
         };
         getAsyncData();
     }, []);
@@ -73,9 +71,7 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         const getData = async () => {
             setLoading(true);
-            const response = await fetch(
-                `https://api.weatherapi.com/v1/forecast.json?key=1e6c3383411a4a98aa4132232241112&q=${selectedCity}&days=14`
-            );
+            const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=1e6c3383411a4a98aa4132232241112&q=${selectedCity}&days=14`);
             const data = await response.json();
             setWeatherData(data);
             setLoading(false);
@@ -85,14 +81,7 @@ const HomeScreen = ({ navigation }) => {
 
     if (loading) {
         return (
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: PRIMARY,
-                }}
-            >
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: PRIMARY }}>
                 <ActivityIndicator size="large" color={ACCENT} />
             </View>
         );
@@ -105,9 +94,6 @@ const HomeScreen = ({ navigation }) => {
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
         >
-            {/* ✅ NEW GREETING TEXT */}
-            <Text style={styles.greeting}>Welcome to the Weather App ☀️</Text>
-
             <View style={styles.searchCity}>
                 <TextInput
                     style={styles.searchBar}
@@ -115,29 +101,28 @@ const HomeScreen = ({ navigation }) => {
                     placeholderTextColor={`${ACCENT}80`}
                     selectionColor={ACCENT}
                     value={searchTerm}
-                    onChangeText={text => setSearchTerm(text)}
+                    onChangeText={(text) => setSearchTerm(text)}
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                 />
-                {focused &&
-                    filteredCities.map(city => (
-                        <Pressable
-                            key={city.nume}
-                            onPress={() => {
-                                setSelectedCity(city.slug);
-                                setSearchTerm(city.nume);
-                                setFocused(false);
-                                Keyboard.dismiss();
-                            }}
-                        >
-                            <Text style={styles.searchResult}>{city.nume}</Text>
-                        </Pressable>
-                    ))}
+                {focused && filteredCities.map(city => (
+                    <Pressable
+                        key={city.nume}
+                        onPress={() => {
+                            setSelectedCity(city.slug);
+                            setSearchTerm(city.nume);
+                            setFocused(false);
+                            Keyboard.dismiss();
+                        }}
+                    >
+                        <Text style={styles.searchResult}>{city.nume}</Text>
+                    </Pressable>
+                ))}
             </View>
 
             <FutureForecast
                 weatherData={weatherData}
-                dateTitle={'Today'}
+                dateTitle={"Today"}
                 condition={weatherData?.current?.condition.text}
                 showDivider={true}
                 temperature={weatherData?.current?.temp_c}
@@ -154,7 +139,9 @@ const HomeScreen = ({ navigation }) => {
             />
 
             <HourTemperatureInfo weatherData={weatherData} />
+
             <ForecastButton navigation={navigation} selectedCity={selectedCity} id={23} />
+
             <FavoritesCities
                 favourites={favourites}
                 setFavourites={setFavourites}
@@ -181,13 +168,6 @@ const styles = StyleSheet.create({
     scrollContent: {
         padding: SPACE_LARGE,
         flexGrow: 1,
-    },
-    greeting: {
-        color: ACCENT,
-        fontSize: 26,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: SPACE_MEDIUM,
     },
     searchCity: {
         borderWidth: 1.5,
