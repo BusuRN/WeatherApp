@@ -112,12 +112,12 @@ const HomeScreen = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
             style={styles.scroll}
             contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="handled"
+        // keyboardShouldPersistTaps="handled"
         >
             <View style={styles.searchCity}>
                 <TextInput
                     style={styles.searchBar}
-                    placeholder="Search"
+                    placeholder="Bucuresti "
                     placeholderTextColor={`${ACCENT}80`}
                     selectionColor={ACCENT}
                     value={searchTerm}
