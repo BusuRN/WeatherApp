@@ -6,6 +6,7 @@ import {
     Text,
     TextInput,
     View,
+    ActivityIndicator,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { ACCENT, PRIMARY } from '../constants/COLORS';
@@ -15,7 +16,6 @@ import {
     SPACE_MEDIUM,
     SPACE_SMALL,
 } from '../constants/LAYOUT';
-import { ActivityIndicator } from 'react-native';
 import Divider from '../components/Divider';
 import { CITIES } from '../constants/CITIES';
 import SunriseInfo from '../components/SunriseInfo';
@@ -33,8 +33,9 @@ const HomeScreen = ({ navigation }) => {
     const [weatherData, setWeatherData] = useState(null);
     const [selectedCity, setSelectedCity] = useState('Bucuresti');
     const [didInitialize, setDidInitialize] = useState(false);
-    const [favourites, setFavourites] = useState([]);
+    const [favourites, setFavourites] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
+    const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
     const filteredCities = CITIES.filter(city =>
         city.nume.toLowerCase().includes(searchTerm.toLowerCase())
@@ -42,8 +43,10 @@ const HomeScreen = ({ navigation }) => {
 
     useEffect(() => {
         const getAsyncData = async () => {
-            const stringValue = await AsyncStorage.getItem("favourites");
-            setFavourites(JSON.parse(stringValue) || []);
+            const stringValue = await AsyncStorage.getItem('favourites');
+            if (stringValue) {
+                setFavourites(JSON.parse(stringValue));
+            }
         };
         getAsyncData();
     }, []);
@@ -71,9 +74,26 @@ const HomeScreen = ({ navigation }) => {
     useEffect(() => {
         const getData = async () => {
             setLoading(true);
-            const response = await fetch(`https://api.weatherapi.com/v1/forecast.json?key=1e6c3383411a4a98aa4132232241112&q=${selectedCity}&days=14`);
-            const data = await response.json();
-            setWeatherData(data);
+            try {
+                const response = await fetch(
+                    `https://api.weatherapi.com/v1/forecast.json?key=1e6c3383411a4a98aa4132232241112&q=${selectedCity}&days=14`
+                );
+                const data = await response.json();
+                setWeatherData(data);
+
+                // ✅ Update the timestamp
+                const now = new Date();
+                const formatted = now.toLocaleString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                });
+                setLastUpdated(formatted);
+            } catch (error) {
+                console.error('Failed to fetch weather data:', error);
+            }
             setLoading(false);
         };
         getData();
@@ -81,7 +101,7 @@ const HomeScreen = ({ navigation }) => {
 
     if (loading) {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: PRIMARY }}>
+            <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color={ACCENT} />
             </View>
         );
@@ -101,28 +121,34 @@ const HomeScreen = ({ navigation }) => {
                     placeholderTextColor={`${ACCENT}80`}
                     selectionColor={ACCENT}
                     value={searchTerm}
-                    onChangeText={(text) => setSearchTerm(text)}
+                    onChangeText={text => setSearchTerm(text)}
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                 />
-                {focused && filteredCities.map(city => (
-                    <Pressable
-                        key={city.nume}
-                        onPress={() => {
-                            setSelectedCity(city.slug);
-                            setSearchTerm(city.nume);
-                            setFocused(false);
-                            Keyboard.dismiss();
-                        }}
-                    >
-                        <Text style={styles.searchResult}>{city.nume}</Text>
-                    </Pressable>
-                ))}
+                {focused &&
+                    filteredCities.map(city => (
+                        <Pressable
+                            key={city.nume}
+                            onPress={() => {
+                                setSelectedCity(city.slug);
+                                setSearchTerm(city.nume);
+                                setFocused(false);
+                                Keyboard.dismiss();
+                            }}
+                        >
+                            <Text style={styles.searchResult}>{city.nume}</Text>
+                        </Pressable>
+                    ))}
             </View>
+
+            {/* ✅ Show last update time */}
+            {lastUpdated && (
+                <Text style={styles.updatedText}>Last updated: {lastUpdated}</Text>
+            )}
 
             <FutureForecast
                 weatherData={weatherData}
-                dateTitle={"Today"}
+                dateTitle={'Today'}
                 condition={weatherData?.current?.condition.text}
                 showDivider={true}
                 temperature={weatherData?.current?.temp_c}
@@ -171,7 +197,7 @@ const styles = StyleSheet.create({
     },
     searchCity: {
         borderWidth: 1.5,
-        borderRadius: 30,
+        borderRadius: 28,
         borderColor: ACCENT,
         width: '100%',
         padding: SPACE_MEDIUM,
@@ -189,8 +215,20 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         paddingVertical: SPACE_MEDIUM / 2,
     },
+    updatedText: {
+        textAlign: 'center',
+        marginVertical: SPACE_SMALL,
+        fontSize: FONT_MEDIUM,
+        color: ACCENT,
+    },
     footerContainer: {
         flex: 1,
         justifyContent: 'flex-end',
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: PRIMARY,
     },
 });
